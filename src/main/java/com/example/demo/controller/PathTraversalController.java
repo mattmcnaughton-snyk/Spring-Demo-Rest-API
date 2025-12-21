@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -17,8 +18,16 @@ import java.nio.file.Path;
 @RestController
 public class PathTraversalController {
 
+
+    @GetMapping("/file")
+    public String readFile(@RequestParam String filename) throws IOException {
+        log.info("Getting File: {}", new File("/tmp/" + filename).getAbsolutePath());
+        return Files.readString(Path.of("/tmp/" + filename));
+    }
+
+
     @GetMapping(value = "/file", produces = MediaType.TEXT_PLAIN_VALUE)
-    public ResponseEntity<String> readFile(@RequestParam String filename) throws IOException {
+    public ResponseEntity<String> readFile_secure(@RequestParam String filename) throws IOException {
 
         Path path = Path.of("/tmp", filename).normalize();
 

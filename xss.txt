@@ -1,0 +1,7 @@
+<h1>Demo File</h1>
+<script>
+  alert("XSS via file content!");
+</script>
+
+
+http://localhost:8080/file?filename=..%5CUsers%5Cmattm%5Cprojects%5CSnyk-Demo-Presentation%5CSpring-demo%5Cxss.txt

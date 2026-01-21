@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vulnerable-java-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: spring-boot-api
+  template:
+    metadata:
+      labels:
+        app: spring-boot-api
+    spec:
+      # CRITICAL: Shares the host's process ID namespace.
+      hostPID: true 
+      
+      containers:
+      - name: spring-boot-api
+        image: demo-0.0.1-SNAPSHOT:latest
+        ports:
+        - containerPort: 8080
+        
+        securityContext:
+          # CRITICAL: Gives the container almost all the same capabilities as processes 
+          # running on the host (bypasses Docker isolation).
+          privileged: true
+          
+          # CRITICAL: Allows the process to gain more privileges than its parent.
+          allowPrivilegeEscalation: true
+          
+          # CRITICAL: Running as root (User 0)
+          runAsUser: 0
+          
+        volumeMounts:
+        - mountPath: /host/root
+          name: host-fs
+          
+      volumes:
+      - name: host-fs
+        hostPath:
+          # CRITICAL: Mounts the literal root filesystem of the AWS/Azure/Local node.
+          path: /
+          type: Directory

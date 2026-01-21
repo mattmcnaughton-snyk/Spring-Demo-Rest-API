@@ -1,0 +1,31 @@
+trigger:
+- main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+# Standard Snyk Setup to get the snyk binaries for cli use
+- script: |
+    curl https://static.snyk.io/cli/latest/snyk-linux -o snyk
+    chmod +x ./snyk
+    mv ./snyk /usr/local/bin/
+  displayName: 'Install Snyk CLI'
+
+# Scan Java Code (SAST)
+- script: snyk code test --severity-threshold=high
+  displayName: 'Snyk Code Scan (Java)'
+  env:
+    SNYK_TOKEN: $(SNYK_TOKEN)
+
+# Scan Maven Dependencies (SCA)
+- script: snyk test --severity-threshold=high
+  displayName: 'Snyk Open Source Scan (Maven)'
+  env:
+    SNYK_TOKEN: $(SNYK_TOKEN)
+
+# Scan the K8s Manifest (IaC)
+- script: snyk iac test deployment.yaml --severity-threshold=high
+  displayName: 'Snyk IaC Scan (Kubernetes)'
+  env:
+    SNYK_TOKEN: $(SNYK_TOKEN)

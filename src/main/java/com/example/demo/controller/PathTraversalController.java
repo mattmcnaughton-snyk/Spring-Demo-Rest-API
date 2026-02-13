@@ -9,10 +9,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
+
+import jakarta.servlet.http.HttpServletResponse;
 
 @Slf4j
 @RestController
@@ -40,4 +45,6 @@ public class PathTraversalController {
                 .contentType(MediaType.TEXT_PLAIN)
                 .body(content);
     }
+
+
 }

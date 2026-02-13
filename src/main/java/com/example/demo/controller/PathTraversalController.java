@@ -46,23 +46,6 @@ public class PathTraversalController {
                 .body(content);
     }
 
-    // Command Injection vulnerability - user input passed directly to shell command
-    @GetMapping("/ping")
-    public String pingHost(@RequestParam String host) throws IOException {
-        log.info("Pinging host: {}", host);
-        
-        // VULNERABLE: User input is directly concatenated into shell command
-        Process process = Runtime.getRuntime().exec("ping -c 1 " + host);
-        
-        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-        StringBuilder output = new StringBuilder();
-        String line;
-        while ((line = reader.readLine()) != null) {
-            output.append(line).append("\n");
-        }
-        return output.toString();
-    }
-
     // Open Redirect vulnerability - user controls redirect destination
     @GetMapping("/redirect")
     public void redirectToUrl(@RequestParam String url, HttpServletResponse response) throws IOException {

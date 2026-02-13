@@ -46,12 +46,5 @@ public class PathTraversalController {
                 .body(content);
     }
 
-    // Open Redirect vulnerability - user controls redirect destination
-    @GetMapping("/redirect")
-    public void redirectToUrl(@RequestParam String url, HttpServletResponse response) throws IOException {
-        log.info("Redirecting to: {}", url);
-        
-        // VULNERABLE: User-controlled URL used directly in redirect
-        response.sendRedirect(url);
-    }
+
 }
